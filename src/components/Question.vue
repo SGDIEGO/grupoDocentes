@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Question } from "../interfaces";
 import Choice from "./Choice.vue";
 
 const props = defineProps<{ props: Question }>();
+const emit = defineEmits(['response']);
 
 const selectedOption = ref<string | null>(null);
-
 const handleSelection = (option: string) => {
   selectedOption.value = option;
 };
+
+watch(selectedOption, (newOption ) => {
+  emit('response', props.props._id.$oid, newOption)
+})
+
 </script>
 
 <template>
@@ -30,6 +35,7 @@ const handleSelection = (option: string) => {
       class="w-full p-2 border border-gray-300 bg-white rounded"
       v-else-if="props.props.type == 'TEXT'"
       placeholder="Escribe tu respuesta aquí..."
+      v-model="selectedOption"
     ></textarea>
   </div>
 </template>
